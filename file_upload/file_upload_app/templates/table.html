@@ -1,0 +1,59 @@
+<html>
+    <head>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <title>
+            Excel file upload and processing 
+        </title>
+    </head>
+
+    <body style="margin-top: 30px;margin-left: 30px;">
+
+      <input type="text" id="txtSearch" onkeyup="searchOpen(this)" placeholder="Search..">
+      <button style="float: right;" onclick="window.location.href = '/';">Go Back</button>
+      <table id="table_id" style="width:100%" border="1">
+        <tr>
+          <th>Name</th>
+          <th>email</th>
+          <th>Phone</th>
+          <th>Age(in years)</th>
+        </tr>
+        {% for each in userdetail_data %}
+          <tr>
+            <td>{{each.name}}</td>
+            <td>{{each.email}}</td>
+            <td>{{each.phone}}</td>
+            <td>{{each.age}}</td>
+          </tr>
+        {% endfor %}
+
+      </table>
+    </body>
+</html>
+
+<script>
+function searchOpen(event) {
+    var search = $(event).val()
+    var data = {
+        search: search
+    };
+      $.ajax(
+          {
+              type:"GET",
+              url: "/search",
+              data:{
+                       search_data: search
+              },
+              success: function( data ) 
+              {
+                $("#table_id tr:gt(0)").remove();
+                console.log(data.userdetail_data);
+                $.each(data.userdetail_data, function( index, value ) {
+                  console.log( index + ": " + value );
+                  $('#table_id ').append('<tr><td>'+value.name+'</td><td>'+value.email+'</td><td>'+value.phone+'</td><td>'+value.age+'</td></tr>');
+                });
+              }
+           });
+}
+
+
+</script>
